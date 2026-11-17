@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
-import ProductCard from "./components/ProductCard.jsx";
+import Navbar from "./components/Navbar.jsx";
+import ProductList from "./components/ProductList.jsx";
 
 const products = [
   {
@@ -113,42 +114,13 @@ function App() {
   return (
     <div className={`app${isDark ? " theme-dark" : ""}`}>
 
-      {/* HEADER */}
-      <header className="header">
-        <div className="logo">
-          🍔 Food Menu
-        </div>
-
-        <input
-          className="search-input"
-          type="search"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder="Rechercher un plat..."
-          aria-label="Rechercher un plat, une catégorie ou une description"
-        />
-
-        <div className="header-actions">
-          <button
-            type="button"
-            className="theme-toggle"
-            onClick={() => setIsDark((currentTheme) => !currentTheme)}
-            aria-label={isDark ? "Activer le thème clair" : "Activer le thème sombre"}
-            title={isDark ? "Activer le thème clair" : "Activer le thème sombre"}
-          >
-            {isDark ? "☀️" : "🌙"}
-          </button>
-
-          <div className="favorites-counter">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0UHYANqUHbyR8PxCf5fUk6j4YxT0vbJMolnXEeR-rEQ&s=10"
-              alt=""
-              style={{ width: 24, height: 24, objectFit: "cover", verticalAlign: "middle", marginRight: 8 }}
-            />
-            {favorites.length}
-          </div>
-        </div>
-      </header>
+      <Navbar
+        search={search}
+        onSearchChange={setSearch}
+        isDark={isDark}
+        onToggleTheme={() => setIsDark((currentTheme) => !currentTheme)}
+        favoritesCount={favorites.length}
+      />
 
       {/* CONTENU PRINCIPAL */}
       <div className="layout">
@@ -256,46 +228,12 @@ function App() {
 
         </aside>
 
-        {/* MAIN */}
-        <main className="main">
-
-          {/* TITRE */}
-          <div className="main-header">
-            <h1>
-              {category === "All"
-                ? "Notre Menu"
-                : category}
-            </h1>
-
-            <p>
-              Découvrez nos délicieux produits
-            </p>
-          </div>
-
-          {/* PRODUITS */}
-          <div className="products-grid">
-
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                isFavorite={favorites.includes(
-                  product.id
-                )}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))}
-
-          </div>
-
-          {/* SI AUCUN PRODUIT */}
-          {filteredProducts.length === 0 && (
-            <div className="empty">
-              Aucun produit trouvé.
-            </div>
-          )}
-
-        </main>
+        <ProductList
+          products={filteredProducts}
+          category={category}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+        />
 
       </div>
     </div>
